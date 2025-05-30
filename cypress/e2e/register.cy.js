@@ -45,7 +45,7 @@ describe('Registration Functionality', () => {
 
     cy.get('input[id="firstName"]').type('John')
     cy.get('input[id="lastName"]').type('Doe')
-    cy.get('input[id="email"]').type('newuser2@email.com')
+    cy.get('input[id="email"]').type('newuser4@email.com')
     cy.get('input[id="password"]').type('securepassword123')
     cy.get('input[id="confirmPassword"]').type('securepassword123')
     cy.get('select[name="gender"]').select('male')
@@ -58,5 +58,7 @@ describe('Registration Functionality', () => {
 
     // Wait for navigation and check URL
     cy.url({ timeout: 30000 }).should('include', '/otp-verify')
+    cy.screenshot('registr');
+
   })
 }) 

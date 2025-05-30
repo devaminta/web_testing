@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import axios from "axios";
 
 import {
   Pagination,
@@ -46,35 +47,93 @@ import {
   ShieldAlert,
   ShieldCheck,
 } from "lucide-react";
-import { useGetUsersQuery } from "@/store/services/userApi";
+
+interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+  role: string;
+  profilePic?: string;
+}
 
 export default function UsersPage() {
-
   const { data: session } = useSession();
-
-
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  // Fetch users data using RTK Query
-  const { data: users, isLoading, error } = useGetUsersQuery(session?.user.accessToken);
+  // Fetch all users
+  const fetchUsers = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get('http://localhost:3000/auth/users', {
+        headers: {
+          Authorization: `Bearer ${session?.user.accessToken}`
+        }
+      });
+      setUsers(response.data);
+      setError(null);
+    } catch (err) {
+      setError('Error loading users. Please try again later.');
+      console.error('Error fetching users:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  // Filter users based on search query and status filter
-  const filteredUsers = users?.filter((user) => {
-    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
-    const matchesSearch =
-      fullName.includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.username.toLowerCase().includes(searchQuery.toLowerCase());
+  // Search users
+  const searchUsers = async (query: string) => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`http://localhost:3000/auth/search-users?q=${query}`, {
+        headers: {
+          Authorization: `Bearer ${session?.user.accessToken}`
+        }
+      });
+      setUsers(response.data);
+      setError(null);
+    } catch (err) {
+      setError('Error searching users. Please try again later.');
+      console.error('Error searching users:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    if (statusFilter === "All") return matchesSearch;
-    if (statusFilter === "Active") return matchesSearch && user.role !== "Suspended";
-    if (statusFilter === "Suspended") return matchesSearch && user.role === "Suspended";
-    if (statusFilter === "Verified") return matchesSearch && user.role === "Admin";
-    return matchesSearch;
-  }) || [];
+  // Initial fetch
+  useEffect(() => {
+    if (session?.user.accessToken) {
+      fetchUsers();
+    }
+  }, [session?.user.accessToken]);
+
+  // Handle search
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (searchQuery) {
+        searchUsers(searchQuery);
+      } else {
+        fetchUsers();
+      }
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchQuery]);
+
+  // Filter users based on status
+  const filteredUsers = users.filter((user) => {
+    if (statusFilter === "All") return true;
+    if (statusFilter === "Active") return user.role !== "Suspended";
+    if (statusFilter === "Suspended") return user.role === "Suspended";
+    if (statusFilter === "Verified") return user.role === "Admin";
+    return true;
+  });
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -93,7 +152,7 @@ export default function UsersPage() {
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-red-500">Error loading users. Please try again later.</div>
+        <div className="text-red-500">{error}</div>
       </div>
     );
   }

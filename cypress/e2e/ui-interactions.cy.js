@@ -1,5 +1,7 @@
 describe('UI Element Interactions', () => {
   beforeEach(() => {
+    cy.viewport(1280, 720) 
+
     cy.visit('/signin')
   })
 
@@ -17,6 +19,9 @@ describe('UI Element Interactions', () => {
       cy.get('input[id="email"]').type('invalid-email')
       cy.get('button').contains('Login').click()
       cy.get('input[id="email"]').should('have.attr', 'type', 'email')
+
+      cy.screenshot('input-interaction');
+
     })
 
     it('should handle password input validation', () => {
@@ -27,6 +32,9 @@ describe('UI Element Interactions', () => {
       cy.on('window:console', (log) => {
         expect(log.text).to.include('Email and password are required')
       })
+
+
+      cy.screenshot('validation');
 
       // Test password field type
       cy.get('input[id="password"]').should('have.attr', 'type', 'password')
@@ -43,6 +51,9 @@ describe('UI Element Interactions', () => {
       // Test button styling
       cy.get('button').contains('Login').should('have.class', 'bg-[#4640DE]')
       cy.get('button').contains('Login').should('have.class', 'text-white')
+
+      cy.screenshot('button');
+
     })
   })
 
@@ -65,6 +76,8 @@ describe('UI Element Interactions', () => {
       // Check button styling
       cy.get('button').contains('Login').should('have.class', 'rounded-full')
       cy.get('button').contains('Login').should('have.class', 'bg-[#4640DE]')
+      cy.screenshot('form');
+
     })
   })
 
@@ -82,6 +95,9 @@ describe('UI Element Interactions', () => {
       // Check button styling
       cy.get('button').contains('Login').should('have.class', 'rounded-full')
       cy.get('button').contains('Login').should('have.class', 'bg-[#4640DE]')
+
+      cy.screenshot('form-layout');
+
     })
 
     it('should handle responsive design', () => {
@@ -96,6 +112,9 @@ describe('UI Element Interactions', () => {
       cy.get('form').should('be.visible')
       cy.get('input[id="email"]').should('be.visible')
       cy.get('input[id="password"]').should('be.visible')
+
+      cy.screenshot('responsive');
+
     })
   })
 
@@ -105,6 +124,9 @@ describe('UI Element Interactions', () => {
       cy.get('input[id="email"]').type('invalid@email.com')
       cy.get('input[id="password"]').type('wrongpassword')
       cy.get('button').contains('Login').click()
+
+      cy.screenshot('error');
+
 
       // Check for error message in console
       cy.on('window:console', (log) => {

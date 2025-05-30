@@ -239,20 +239,25 @@ export function ContentDrawer({
             </div>
           </ScrollArea>
 
-          <DrawerFooter className="border-t">
+          <DrawerFooter>
             <div className="flex justify-end gap-2">
               <Button
                 variant="outline"
-                onClick={() => onContentAction(content.id, "reject")}
+                onClick={onClose}
               >
-                <ShieldAlert className="h-4 w-4 mr-2" />
-                Reject
+                Close
               </Button>
               <Button
-                onClick={() => onContentAction(content.id, "approve")}
+                variant="default"
+                onClick={() => onContentAction(content.id, "update")}
               >
-                <ShieldCheck className="h-4 w-4 mr-2" />
-                Approve
+                Update
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => onContentAction(content.id, "delete")}
+              >
+                Delete
               </Button>
             </div>
           </DrawerFooter>

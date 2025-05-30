@@ -421,18 +421,10 @@ export function ContentDrawer({
               <Button
                 variant="outline"
                 className="sm:flex-1 gap-2"
-                onClick={() => onContentAction(content.id, "approve")}
+                onClick={() => onContentAction(content.id, "change")}
               >
                 <CheckCircle className="h-4 w-4 text-green-500" />
-                Approve
-              </Button>
-              <Button
-                variant="outline"
-                className="sm:flex-1 gap-2"
-                onClick={() => onContentAction(content.id, "reject")}
-              >
-                <XCircle className="h-4 w-4 text-amber-500" />
-                Reject
+                Change
               </Button>
               <Button
                 variant="destructive"

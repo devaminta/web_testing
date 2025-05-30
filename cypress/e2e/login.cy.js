@@ -1,5 +1,7 @@
 describe('Login Functionality', () => {
+  
   beforeEach(() => {
+    cy.viewport(1280, 720) 
     cy.visit('/signin') // Updated to match your actual route
   })
 
@@ -36,5 +38,7 @@ describe('Login Functionality', () => {
 
     // After successful login, should redirect to dashboard
     cy.url({ timeout: 30000 }).should('include', '/')
+    cy.screenshot('login');
+
   })
 }) 

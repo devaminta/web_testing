@@ -235,19 +235,11 @@ export function ContentList({
                             <DropdownMenuContent align="end">
                               <DropdownMenuItem
                                 onClick={() =>
-                                  onContentAction(item.id, "approve")
+                                  onContentAction(item.id, "change")
                                 }
                               >
                                 <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
-                                Approve
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  onContentAction(item.id, "reject")
-                                }
-                              >
-                                <XCircle className="h-4 w-4 mr-2 text-amber-500" />
-                                Reject
+                                Change
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() =>
@@ -363,16 +355,10 @@ export function ContentList({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem
-                        onClick={() => onContentAction(item.id, "approve")}
+                        onClick={() => onContentAction(item.id, "change")}
                       >
                         <CheckCircle className="h-4 w-4 mr-2 text-green-500" />
-                        Approve
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => onContentAction(item.id, "reject")}
-                      >
-                        <XCircle className="h-4 w-4 mr-2 text-amber-500" />
-                        Reject
+                        Change
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => onContentAction(item.id, "delete")}

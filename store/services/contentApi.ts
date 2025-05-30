@@ -52,6 +52,23 @@ export const contentApi = createApi({
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       }),
     }),
+    deleteReel: builder.mutation<void, { id: string; token?: string }>({
+      query: ({ id, token }) => ({
+        url: `/reel/${id}`,
+        method: 'DELETE',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      }),
+      invalidatesTags: ['Content'],
+    }),
+    updateReel: builder.mutation<void, { id: string; data: any; token?: string }>({
+      query: ({ id, data, token }) => ({
+        url: `/reel/${id}`,
+        method: 'PATCH',
+        body: data,
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      }),
+      invalidatesTags: ['Content'],
+    }),
   }),
 });
 
@@ -59,4 +76,6 @@ export const {
   useGetContentsQuery,
   useGetContentByIdQuery,
   useGetContentReportsQuery,
+  useDeleteReelMutation,
+  useUpdateReelMutation,
 } = contentApi; 
